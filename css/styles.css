@@ -1,0 +1,79 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+:root {
+  --font-serif: 'Cinzel', Georgia, serif;
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --ocean-primary: #0284c7;
+  --ocean-dark: #07264a;
+  --ocean-light: #f0f9ff;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: #f8fafc;
+  color: #1e293b;
+  overflow-x: hidden;
+}
+
+/* Custom Scrollbars */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #0284c7;
+}
+
+/* Modern Web Guidance Compliance for <dialog> Modals */
+dialog:modal {
+  overscroll-behavior: contain;
+  margin: auto;
+  border: none;
+  padding: 0;
+  background: transparent;
+  max-width: 95vw;
+}
+
+dialog::backdrop {
+  overflow: hidden;
+  overscroll-behavior: contain;
+  background-color: rgba(15, 23, 42, 0.55);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+/* Ocean Wave Shimmer for Light Theme */
+.ocean-hero-mesh {
+  background: radial-gradient(circle at 50% 0%, rgba(2, 132, 199, 0.08) 0%, rgba(240, 249, 255, 0.4) 60%, transparent 100%);
+}
+
+.glow-ocean-sm {
+  box-shadow: 0 4px 20px -2px rgba(2, 132, 199, 0.15);
+}
+
+.glow-ocean-md {
+  box-shadow: 0 10px 30px -4px rgba(2, 132, 199, 0.2);
+}
+
+/* Touch & Drag Handling according to modern-web-guidance */
+.handle, [draggable="true"] {
+  touch-action: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* Certificate Preview responsive scaling */
+#cert-preview-canvas {
+  width: 100%;
+  height: auto;
+  max-height: 75vh;
+  object-fit: contain;
+  box-shadow: 0 20px 40px -10px rgba(7, 38, 74, 0.15);
+}
