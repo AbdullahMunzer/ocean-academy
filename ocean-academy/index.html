@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IOI Ocean Academy BD | Ocean Self-Learning & Verified Certification</title>
+  <meta name="description" content="Self-learning ocean courses and interactive certification under International Ocean Institute - Ocean Academy Bangladesh (IOI Ocean Academy BD).">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            ocean: {
+              50: '#f0f9ff',
+              100: '#e0f2fe',
+              200: '#bae6fd',
+              500: '#0284c7',
+              600: '#0369a1',
+              700: '#075985',
+              800: '#0c4a6e',
+              900: '#07264a',
+              950: '#031730',
+            },
+            sky: {
+              50: '#f0f9ff',
+              100: '#e0f2fe',
+              200: '#bae6fd',
+              300: '#7dd3fc',
+              400: '#38bdf8',
+              500: '#0ea5e9',
+              600: '#0284c7',
+              700: '#0369a1',
+              800: '#075985',
+              900: '#0c4a6e',
+            }
+          },
+          fontFamily: {
+            serif: ['Cinzel', 'Georgia', 'serif'],
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- jsPDF for Print-Ready PDF Certificate -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+  <!-- QRCode.js for dynamic certificate verification QR codes -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+  <!-- Canvas Confetti for Celebration Fanfare -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col selection:bg-sky-200 selection:text-sky-900 antialiased">
+
+  <!-- Top Global Header / Navigation (Clean Crisp White & Ocean Blue) -->
+  <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-sky-100 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+      <!-- Logo & Institution Identity -->
+      <a href="#home" class="flex items-center gap-3 group text-decoration-none">
+        <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-sky-500 to-blue-700 p-0.5 shadow-md shadow-sky-500/20 group-hover:scale-105 transition">
+          <div class="w-full h-full bg-white rounded-[10px] flex items-center justify-center">
+            <i data-lucide="compass" class="w-6 h-6 text-sky-600 group-hover:rotate-45 transition-transform duration-500"></i>
+          </div>
+        </div>
+        <div>
+          <div class="flex items-center gap-1.5">
+            <span class="font-extrabold text-base tracking-tight text-slate-900 group-hover:text-sky-700 transition">IOI OCEAN ACADEMY</span>
+            <span class="text-xs px-1.5 py-0.5 rounded bg-sky-100 text-sky-800 border border-sky-300 font-bold">BD</span>
+          </div>
+          <p class="text-[11px] text-slate-500 tracking-wider uppercase font-medium">International Ocean Institute Bangladesh</p>
+        </div>
+      </a>
+
+      <!-- Desktop Nav Links -->
+      <nav class="hidden md:flex items-center gap-1 bg-slate-100/80 p-1.5 rounded-full border border-slate-200">
+        <button type="button" data-nav="home" class="nav-link px-4 py-1.5 rounded-full text-xs font-semibold text-white bg-sky-600 shadow-sm transition">
+          Courses
+        </button>
+        <button type="button" data-nav="lesson" class="nav-link px-4 py-1.5 rounded-full text-xs font-semibold text-slate-600 hover:text-sky-700 transition">
+          Study Lessons
+        </button>
+        <button type="button" data-nav="quiz" class="nav-link px-4 py-1.5 rounded-full text-xs font-semibold text-slate-600 hover:text-sky-700 transition">
+          Interactive Quiz
+        </button>
+        <button type="button" data-nav="certificate" class="nav-link px-4 py-1.5 rounded-full text-xs font-semibold text-slate-600 hover:text-sky-700 transition">
+          Certificate
+        </button>
+        <button type="button" data-nav="verify" class="nav-link px-4 py-1.5 rounded-full text-xs font-semibold text-slate-600 hover:text-sky-700 transition">
+          Verify
+        </button>
+        <button type="button" data-nav="about" class="nav-link px-4 py-1.5 rounded-full text-xs font-semibold text-slate-600 hover:text-sky-700 transition">
+          About IOI BD
+        </button>
+      </nav>
+
+      <!-- Right Header Actions (Audio, Auth Pill, User Profile) -->
+      <div class="flex items-center gap-2 sm:gap-3">
+        <!-- Ocean Ambient Waves Audio Button -->
+        <button id="btn-ambient-waves" type="button" title="Toggle Ocean Wave Ambience" class="p-2 rounded-xl bg-white hover:bg-sky-50 border border-slate-200 text-slate-600 hover:text-sky-700 transition shadow-sm">
+          <i data-lucide="waves" class="w-4 h-4"></i>
+        </button>
+
+        <!-- Sound Effects Mute Toggle -->
+        <button id="btn-audio-mute" type="button" title="Mute/Unmute Audio SFX" class="p-2 rounded-xl bg-white hover:bg-sky-50 border border-slate-200 text-slate-600 hover:text-sky-700 transition shadow-sm">
+          <i data-lucide="volume-2" id="icon-volume" class="w-4 h-4"></i>
+        </button>
+
+        <!-- Auth State Container -->
+        <div id="auth-header-slot" class="flex items-center gap-2">
+          <!-- Injected via JavaScript -->
+        </div>
+
+        <!-- Mobile Menu Toggle Button -->
+        <button id="btn-mobile-menu" type="button" class="md:hidden p-2 rounded-xl bg-white border border-slate-200 text-slate-700 shadow-sm">
+          <i data-lucide="menu" class="w-5 h-5"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Navigation Drawer -->
+    <div id="mobile-nav-drawer" class="hidden md:hidden border-b border-slate-200 bg-white px-4 py-3 space-y-2 shadow-md">
+      <button type="button" data-nav="home" class="nav-link w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-slate-700 hover:bg-sky-50">Courses</button>
+      <button type="button" data-nav="lesson" class="nav-link w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-slate-700 hover:bg-sky-50">Study Lessons</button>
+      <button type="button" data-nav="quiz" class="nav-link w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-slate-700 hover:bg-sky-50">Interactive Quiz</button>
+      <button type="button" data-nav="certificate" class="nav-link w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-slate-700 hover:bg-sky-50">Certificate</button>
+      <button type="button" data-nav="verify" class="nav-link w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-slate-700 hover:bg-sky-50">Verify</button>
+      <button type="button" data-nav="about" class="nav-link w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-slate-700 hover:bg-sky-50">About IOI BD</button>
+    </div>
+  </header>
+
+  <!-- Main Multi-View Content Container -->
+  <main class="flex-1">
+
+    <!-- VIEW 1: HOME & CURRICULUM CATALOG -->
+    <section id="view-home" class="page-view animate-fadeIn">
+      <!-- Hero Section (Light White & Ocean Mesh) -->
+      <div class="relative overflow-hidden ocean-hero-mesh bg-gradient-to-b from-sky-50/80 via-white to-sky-50/30 py-16 sm:py-24 border-b border-sky-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+          <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white border border-sky-200 text-sky-800 text-xs font-bold tracking-wide uppercase mb-6 shadow-sm">
+            <i data-lucide="shield-check" class="w-4 h-4 text-sky-600"></i>
+            International Ocean Institute (IOI) Ocean Academy Bangladesh
+          </div>
+
+          <h1 class="text-4xl sm:text-6xl font-black text-slate-900 tracking-tight leading-tight max-w-4xl mx-auto">
+            Master Ocean Literacy &amp; Marine Governance in <span class="bg-gradient-to-r from-sky-600 via-blue-600 to-teal-600 bg-clip-text text-transparent">Bangladesh</span>
+          </h1>
+
+          <p class="mt-6 text-base sm:text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed">
+            Explore self-paced ocean science curricula covering the vertical depth zonation of the Bay of Bengal, the Swatch of No Ground submarine canyon, benthic vs. pelagic ecosystems, UNCLOS maritime jurisdiction, and sustainable blue economy.
+          </p>
+
+          <!-- Primary Hero CTAs -->
+          <div class="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
+            <button id="btn-hero-guest" type="button" class="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-sky-600 hover:bg-sky-500 text-white font-bold text-sm tracking-wide shadow-lg shadow-sky-600/25 transition flex items-center justify-center gap-2 group">
+              <i data-lucide="compass" class="w-4 h-4 group-hover:rotate-45 transition-transform"></i>
+              <span>Explore as Guest (1-Click)</span>
+            </button>
+            <button id="btn-hero-register" type="button" class="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-white hover:bg-slate-50 border border-sky-200 text-sky-800 font-semibold text-sm transition flex items-center justify-center gap-2 shadow-sm">
+              <i data-lucide="user-plus" class="w-4 h-4 text-sky-600"></i>
+              <span>Create Account &amp; Save Progress</span>
+            </button>
+          </div>
+
+          <!-- Feature Highlights Strip -->
+          <div class="mt-14 grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto text-left">
+            <div class="p-4 rounded-xl bg-white border border-sky-100 shadow-sm">
+              <i data-lucide="book-open" class="w-5 h-5 text-sky-600 mb-2"></i>
+              <div class="text-xs font-bold text-slate-900">Self-Paced Lessons</div>
+              <div class="text-[11px] text-slate-500 mt-0.5">Interactive depth explorer &amp; diagrams</div>
+            </div>
+            <div class="p-4 rounded-xl bg-white border border-sky-100 shadow-sm">
+              <i data-lucide="brain" class="w-5 h-5 text-teal-600 mb-2"></i>
+              <div class="text-xs font-bold text-slate-900">5-Format Quiz Engine</div>
+              <div class="text-[11px] text-slate-500 mt-0.5">MCQ, T/F, drag matching &amp; sorting</div>
+            </div>
+            <div class="p-4 rounded-xl bg-white border border-sky-100 shadow-sm">
+              <i data-lucide="award" class="w-5 h-5 text-amber-500 mb-2"></i>
+              <div class="text-xs font-bold text-slate-900">Verified Certificate</div>
+              <div class="text-[11px] text-slate-500 mt-0.5">Dynamic QR &amp; print-ready PDF/PNG</div>
+            </div>
+            <div class="p-4 rounded-xl bg-white border border-sky-100 shadow-sm">
+              <i data-lucide="unlock" class="w-5 h-5 text-emerald-600 mb-2"></i>
+              <div class="text-xs font-bold text-slate-900">Guest Friendly</div>
+              <div class="text-[11px] text-slate-500 mt-0.5">Learn instantly, sign up to claim</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Course Catalog Section -->
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10">
+          <div>
+            <div class="text-xs font-bold uppercase tracking-wider text-sky-600">Curricula &amp; Accreditations</div>
+            <h2 class="text-3xl font-black text-slate-900 mt-1">Official Ocean Academy Courses</h2>
+            <p class="text-slate-600 text-sm mt-1">Curated under the guidance of IOI Bangladesh faculty &amp; maritime scientists.</p>
+          </div>
+        </div>
+
+        <div id="course-cards-grid" class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <!-- Populated dynamically via JS -->
+        </div>
+      </div>
+    </section>
+
+
+    <!-- VIEW 2: STUDY LESSON VIEWER & DEPTH EXPLORER -->
+    <section id="view-lesson" class="page-view hidden animate-fadeIn py-10">
+      <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
+        <!-- Lesson Breadcrumbs & Title -->
+        <div class="flex items-center justify-between border-b border-slate-200 pb-5">
+          <div>
+            <button type="button" data-nav="home" class="inline-flex items-center gap-1.5 text-xs text-sky-600 hover:underline mb-2 font-semibold">
+              <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i> Back to Courses
+            </button>
+            <h2 id="lesson-course-title" class="text-2xl sm:text-3xl font-extrabold text-slate-900">Foundations of Oceanography &amp; Marine Governance in the Bay of Bengal</h2>
+            <p class="text-xs text-slate-500 mt-1">Course Code: <span class="text-sky-700 font-mono font-bold">IOI-BD-101</span> • Interactive Curriculum</p>
+          </div>
+          <button id="btn-jump-to-quiz" type="button" class="px-5 py-2.5 rounded-xl bg-sky-600 hover:bg-sky-500 text-white font-bold text-xs tracking-wide shadow-md shadow-sky-600/20 transition flex items-center gap-2">
+            <i data-lucide="brain" class="w-4 h-4"></i> Take Final Quiz
+          </button>
+        </div>
+
+        <!-- Interactive Ocean Depth Explorer Widget -->
+        <div class="bg-white border border-sky-200 rounded-2xl p-6 sm:p-8 shadow-sm relative overflow-hidden">
+          <div class="flex items-center justify-between mb-4">
+            <div class="flex items-center gap-2">
+              <i data-lucide="layers" class="w-5 h-5 text-sky-600"></i>
+              <h3 class="text-lg font-bold text-slate-900">Interactive Vertical Depth Zonation</h3>
+            </div>
+            <span class="text-xs text-sky-800 bg-sky-50 px-3 py-1 rounded-full border border-sky-200 font-medium">Click a zone to inspect</span>
+          </div>
+
+          <!-- Vertical Stratification Diagram -->
+          <div class="grid grid-cols-1 md:grid-cols-4 gap-3 text-xs">
+            <!-- Epipelagic -->
+            <button type="button" class="zone-tab p-4 rounded-xl border border-sky-300 bg-gradient-to-b from-sky-50 to-sky-100 text-left hover:border-sky-500 transition shadow-sm" data-zone="epi">
+              <div class="flex items-center justify-between font-bold text-sky-950 mb-1">
+                <span>Epipelagic</span>
+                <span class="text-[10px] bg-white text-sky-800 px-1.5 py-0.5 rounded border border-sky-200 font-mono">0 – 200m</span>
+              </div>
+              <div class="text-[11px] text-sky-800 font-semibold">Sunlight Zone</div>
+              <div class="text-[10px] text-slate-600 mt-2">Photosynthesis, 90% of marine biomass, tuna &amp; flying fish.</div>
+            </button>
+            <!-- Mesopelagic -->
+            <button type="button" class="zone-tab p-4 rounded-xl border border-blue-300 bg-gradient-to-b from-sky-100 to-blue-100 text-left hover:border-blue-500 transition shadow-sm" data-zone="meso">
+              <div class="flex items-center justify-between font-bold text-blue-950 mb-1">
+                <span>Mesopelagic</span>
+                <span class="text-[10px] bg-white text-blue-800 px-1.5 py-0.5 rounded border border-blue-200 font-mono">200 – 1,000m</span>
+              </div>
+              <div class="text-[11px] text-blue-800 font-semibold">Twilight Zone</div>
+              <div class="text-[10px] text-slate-600 mt-2">Dim blue light, bioluminescence, lanternfish &amp; vampire squid.</div>
+            </button>
+            <!-- Bathypelagic -->
+            <button type="button" class="zone-tab p-4 rounded-xl border border-blue-900 bg-gradient-to-b from-blue-900 to-slate-900 text-left hover:border-sky-400 transition shadow-sm text-white" data-zone="bathy">
+              <div class="flex items-center justify-between font-bold text-sky-200 mb-1">
+                <span>Bathypelagic</span>
+                <span class="text-[10px] bg-blue-950 text-sky-300 px-1.5 py-0.5 rounded border border-blue-800 font-mono">1,000 – 4,000m</span>
+              </div>
+              <div class="text-[11px] text-sky-200 font-semibold">Midnight Zone</div>
+              <div class="text-[10px] text-slate-300 mt-2">Zero sunlight, 1–4°C, anglerfish &amp; gulper eels.</div>
+            </button>
+            <!-- Hadal & Abyss -->
+            <button type="button" class="zone-tab p-4 rounded-xl border border-black bg-gradient-to-b from-slate-900 to-black text-left hover:border-slate-400 transition shadow-sm text-white" data-zone="abyss">
+              <div class="flex items-center justify-between font-bold text-purple-200 mb-1">
+                <span>Abyss &amp; Hadal</span>
+                <span class="text-[10px] bg-black text-purple-300 px-1.5 py-0.5 rounded border border-slate-700 font-mono">&gt;4,000m</span>
+              </div>
+              <div class="text-[11px] text-purple-200 font-semibold">Abyssal Trenches</div>
+              <div class="text-[10px] text-slate-300 mt-2">Crushing pressure, chemosynthetic vents, glass sponges.</div>
+            </button>
+          </div>
+
+          <!-- Zone Detail Callout Container -->
+          <div id="zone-detail-box" class="mt-4 p-4 rounded-xl bg-sky-50/70 border border-sky-200 text-xs text-slate-700 leading-relaxed">
+            <strong class="text-sky-800">Select any oceanic zone above</strong> to inspect biological adaptations, hydrostatic pressure thresholds, and ecological dynamics in the Bay of Bengal.
+          </div>
+        </div>
+
+        <!-- Course Modules List & Study Content -->
+        <div id="lesson-modules-container" class="space-y-6">
+          <!-- Populated by JavaScript -->
+        </div>
+
+        <!-- Bottom Action CTA -->
+        <div class="p-8 rounded-2xl bg-gradient-to-r from-sky-600 via-sky-700 to-blue-800 text-white text-center space-y-4 shadow-xl">
+          <i data-lucide="check-check" class="w-10 h-10 text-sky-200 mx-auto"></i>
+          <h3 class="text-2xl font-bold">Finished Reading the Core Lessons?</h3>
+          <p class="text-sm text-sky-100 max-w-xl mx-auto">
+            Test your comprehension in our interactive 5-format quiz arena. Achieve at least <span class="text-amber-300 font-bold">80%</span> to unlock and download your accredited IOI Ocean Academy Certificate.
+          </p>
+          <button id="btn-start-quiz-bottom" type="button" class="px-8 py-3 rounded-xl bg-white hover:bg-sky-50 text-sky-900 font-bold text-sm tracking-wide shadow-xl transition inline-flex items-center gap-2">
+            <i data-lucide="play" class="w-4 h-4 fill-current"></i> Launch Interactive Examination
+          </button>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- VIEW 3: INTERACTIVE QUIZ ARENA -->
+    <section id="view-quiz" class="page-view hidden animate-fadeIn py-10">
+      <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Rendered by QuizEngine -->
+        <div id="quiz-mount-point"></div>
+      </div>
+    </section>
+
+
+    <!-- VIEW 4: CERTIFICATE STUDIO & CLAIM SCREEN -->
+    <section id="view-certificate" class="page-view hidden animate-fadeIn py-10">
+      <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+        <!-- Studio Header -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 pb-5">
+          <div>
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sky-100 text-sky-800 text-xs font-bold border border-sky-300 mb-2">
+              <i data-lucide="award" class="w-3.5 h-3.5 text-sky-600"></i> IOI Verified Credential Studio
+            </div>
+            <h2 class="text-3xl font-extrabold text-slate-900">Your Certificate of Ocean Literacy</h2>
+            <p class="text-xs text-slate-500 mt-1">Official high-resolution print-ready diploma rendered in real time.</p>
+          </div>
+
+          <!-- Download Action Bar -->
+          <div class="flex items-center gap-3">
+            <button id="btn-download-pdf" type="button" class="px-5 py-2.5 rounded-xl bg-sky-600 hover:bg-sky-500 text-white font-bold text-xs tracking-wide shadow-md shadow-sky-600/25 transition flex items-center gap-2">
+              <i data-lucide="file-text" class="w-4 h-4"></i> Download PDF
+            </button>
+            <button id="btn-download-png" type="button" class="px-5 py-2.5 rounded-xl bg-white hover:bg-slate-50 border border-slate-300 text-slate-700 font-semibold text-xs transition flex items-center gap-2 shadow-sm">
+              <i data-lucide="image" class="w-4 h-4 text-sky-600"></i> High-Res PNG
+            </button>
+          </div>
+        </div>
+
+        <!-- Guest Locked Warning Banner (Visible if Guest) -->
+        <div id="guest-lock-banner" class="hidden p-6 rounded-2xl bg-amber-50 border border-amber-300 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div class="flex items-center gap-4">
+            <div class="w-12 h-12 rounded-xl bg-amber-100 border border-amber-300 flex items-center justify-center text-amber-700 flex-shrink-0">
+              <i data-lucide="lock" class="w-6 h-6"></i>
+            </div>
+            <div>
+              <h4 class="text-base font-bold text-amber-900">Certificate Locked — You are exploring as a Guest!</h4>
+              <p class="text-xs text-amber-800 mt-0.5">
+                Create a free account to imprint your name and claim your certificate! Your quiz score will be permanently saved to your profile.
+              </p>
+            </div>
+          </div>
+          <button id="btn-claim-cert-guest" type="button" class="px-6 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-white font-black text-xs uppercase tracking-wider shadow-md transition whitespace-nowrap">
+            Claim My Certificate
+          </button>
+        </div>
+
+        <!-- Canvas Certificate Container with Clean Border -->
+        <div class="relative rounded-2xl p-2 sm:p-6 bg-white border border-slate-200 shadow-xl flex items-center justify-center overflow-hidden">
+          <canvas id="cert-preview-canvas" class="rounded-xl border border-sky-100 max-w-full"></canvas>
+
+          <!-- Guest Blur Overlay -->
+          <div id="cert-guest-overlay" class="hidden absolute inset-0 bg-white/80 backdrop-blur-sm flex flex-col items-center justify-center p-6 text-center space-y-4">
+            <div class="w-16 h-16 rounded-2xl bg-amber-100 border border-amber-300 flex items-center justify-center text-amber-600 shadow-lg">
+              <i data-lucide="lock" class="w-8 h-8"></i>
+            </div>
+            <h3 class="text-2xl font-black text-slate-900 max-w-md">
+              Create a free account to imprint your name and claim your certificate!
+            </h3>
+            <p class="text-xs text-slate-600 max-w-sm">
+              Sign up with one click using Email or Google. Your passing score will be preserved instantly.
+            </p>
+            <button id="btn-overlay-claim" type="button" class="px-8 py-3 rounded-xl bg-amber-500 hover:bg-amber-400 text-white font-black text-xs uppercase tracking-wider shadow-lg transition">
+              Create Free Account &amp; Imprint Name
+            </button>
+          </div>
+        </div>
+
+        <!-- Verification Share Strip -->
+        <div class="p-6 rounded-2xl bg-white border border-slate-200 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div>
+            <div class="text-xs font-bold uppercase tracking-wider text-slate-500">Public Verification Link</div>
+            <p id="cert-share-link-text" class="text-xs text-sky-700 font-mono mt-1 break-all"></p>
+          </div>
+          <button id="btn-copy-cert-link" type="button" class="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-semibold transition flex items-center gap-2 whitespace-nowrap border border-slate-200">
+            <i data-lucide="copy" class="w-3.5 h-3.5"></i> Copy Verification URL
+          </button>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- VIEW 5: VERIFICATION CHECKER -->
+    <section id="view-verify" class="page-view hidden animate-fadeIn py-12">
+      <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-8">
+        <div class="w-16 h-16 rounded-2xl bg-sky-100 border border-sky-300 flex items-center justify-center text-sky-700 mx-auto shadow-sm">
+          <i data-lucide="shield-check" class="w-8 h-8"></i>
+        </div>
+
+        <div>
+          <h2 class="text-3xl font-black text-slate-900">Certificate Authentication Registry</h2>
+          <p class="text-sm text-slate-600 mt-2 max-w-lg mx-auto">
+            Verify official ocean credentials issued by International Ocean Institute - Ocean Academy Bangladesh.
+          </p>
+        </div>
+
+        <!-- Search Input -->
+        <form id="form-verify" class="flex flex-col sm:flex-row gap-3 max-w-xl mx-auto">
+          <input type="text" id="verify-input-id" placeholder="Enter Certificate ID (e.g. IOI-BD-2026-XXXX)" class="flex-1 px-4 py-3 rounded-xl bg-white border border-slate-300 text-slate-900 placeholder-slate-400 focus:outline-none focus:border-sky-500 text-sm font-mono shadow-sm" required>
+          <button type="submit" class="px-6 py-3 rounded-xl bg-sky-600 hover:bg-sky-500 text-white font-bold text-sm transition flex items-center justify-center gap-2 shadow-sm">
+            <i data-lucide="search" class="w-4 h-4"></i> Verify
+          </button>
+        </form>
+
+        <!-- Verification Result Container -->
+        <div id="verify-result-box" class="hidden text-left p-6 sm:p-8 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-4">
+          <!-- Populated by JavaScript -->
+        </div>
+      </div>
+    </section>
+
+
+    <!-- VIEW 6: USER PROFILE & DASHBOARD -->
+    <section id="view-profile" class="page-view hidden animate-fadeIn py-10">
+      <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+        <!-- Profile Card -->
+        <div class="p-6 sm:p-8 rounded-2xl bg-white border border-slate-200 shadow-sm flex flex-col sm:flex-row items-center gap-6">
+          <div id="profile-avatar-container" class="w-20 h-20 rounded-full border-2 border-sky-500 overflow-hidden flex-shrink-0 shadow-sm">
+            <!-- Avatar SVG injected -->
+          </div>
+          <div class="text-center sm:text-left flex-1">
+            <div class="flex flex-wrap items-center justify-center sm:justify-start gap-2">
+              <h2 id="profile-name" class="text-2xl font-extrabold text-slate-900">Ocean Scholar</h2>
+              <span id="profile-badge" class="text-xs px-2.5 py-0.5 rounded-full bg-sky-100 border border-sky-200 text-sky-800 font-semibold">Registered Student</span>
+            </div>
+            <p id="profile-email" class="text-xs text-slate-500 mt-1">student@ioiacademy.org</p>
+            <div class="mt-4 flex flex-wrap gap-4 text-xs">
+              <div class="bg-slate-50 px-3 py-1.5 rounded-lg border border-slate-200">
+                <span class="text-slate-500">Enrolled Courses:</span>
+                <span id="stat-enrolled" class="font-bold text-slate-900 ml-1">1</span>
+              </div>
+              <div class="bg-slate-50 px-3 py-1.5 rounded-lg border border-slate-200">
+                <span class="text-slate-500">Completed:</span>
+                <span id="stat-completed" class="font-bold text-emerald-600 ml-1">0</span>
+              </div>
+              <div class="bg-slate-50 px-3 py-1.5 rounded-lg border border-slate-200">
+                <span class="text-slate-500">Certificates:</span>
+                <span id="stat-certs" class="font-bold text-amber-600 ml-1">0</span>
+              </div>
+            </div>
+          </div>
+          <button id="btn-logout-profile" type="button" class="px-4 py-2 rounded-xl bg-slate-100 hover:bg-rose-50 hover:text-rose-600 border border-slate-200 text-xs font-semibold text-slate-700 transition">
+            Log Out
+          </button>
+        </div>
+
+        <!-- Earned Certificates Section -->
+        <div class="space-y-4">
+          <h3 class="text-xl font-bold text-slate-900 flex items-center gap-2">
+            <i data-lucide="award" class="w-5 h-5 text-amber-500"></i> My Earned Certificates
+          </h3>
+          <div id="profile-certs-list" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <!-- Injected by JS -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- VIEW 7: ABOUT IOI OCEAN ACADEMY BD -->
+    <section id="view-about" class="page-view hidden animate-fadeIn py-12">
+      <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
+        <div class="text-center space-y-3">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sky-100 text-sky-800 text-xs font-bold border border-sky-300">
+            <i data-lucide="globe" class="w-3.5 h-3.5"></i> Global Network • Local Stewardship
+          </div>
+          <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900">International Ocean Institute (IOI)</h2>
+          <p class="text-base text-sky-700 font-semibold">Ocean Academy Bangladesh</p>
+        </div>
+
+        <div class="prose prose-slate max-w-none text-slate-700 space-y-6 text-sm leading-relaxed">
+          <div class="p-6 rounded-2xl bg-white border border-sky-100 shadow-sm">
+            <h3 class="text-lg font-bold text-slate-900 mb-2">About IOI Ocean Academy Bangladesh</h3>
+            <p>
+              The <strong>International Ocean Institute (IOI)</strong> is a world-renowned non-governmental ocean governance body founded in 1972 by Prof. Elisabeth Mann Borgese. The <strong>IOI Ocean Academy Bangladesh</strong> serves as the national academic vehicle delivering ocean literacy, marine spatial knowledge, and maritime governance capacity to students, researchers, youth, and coastal decision-makers across the Bay of Bengal delta.
+            </p>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="p-6 rounded-2xl bg-white border border-sky-100 shadow-sm space-y-2">
+              <h4 class="text-base font-bold text-sky-800">Curricular Focus</h4>
+              <ul class="space-y-1.5 text-xs text-slate-600 list-disc list-inside">
+                <li>UNCLOS 1982 &amp; Maritime delimitation of Bangladesh</li>
+                <li>Swatch of No Ground (SoNG) &amp; Marine Protected Areas</li>
+                <li>Sundarbans mangrove ecology &amp; blue carbon preservation</li>
+                <li>Sustainable blue economy &amp; mariculture innovation</li>
+                <li>Marine pollution, microplastics &amp; coastal resilience</li>
+              </ul>
+            </div>
+
+            <div class="p-6 rounded-2xl bg-white border border-sky-100 shadow-sm space-y-2">
+              <h4 class="text-base font-bold text-sky-800">Academic Leadership</h4>
+              <p class="text-xs text-slate-700">
+                <strong class="text-slate-900 text-sm">Md. Mostafa Monwar</strong><br>
+                Director, IOI Ocean Academy BD<br>
+                Faculty of Marine Sciences and Fisheries, University of Chittagong<br>
+                Leading Ocean Literacy &amp; Maritime Stewardship across Bangladesh
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+
+  <!-- Global Footer -->
+  <footer class="bg-white border-t border-slate-200 py-10 mt-20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-6">
+      <div class="flex items-center gap-3">
+        <i data-lucide="compass" class="w-6 h-6 text-sky-600"></i>
+        <div class="text-xs text-slate-600">
+          <span class="text-slate-900 font-bold">IOI Ocean Academy BD</span> • International Ocean Institute Bangladesh
+          <div class="text-[11px] text-slate-500">Committed to sustainable ocean literacy and UNCLOS maritime governance.</div>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-4 text-xs text-slate-600">
+        <button id="btn-open-backend-config" type="button" class="hover:text-sky-700 transition flex items-center gap-1.5">
+          <i data-lucide="settings" class="w-3.5 h-3.5"></i> Auth / Backend Setup
+        </button>
+        <span>•</span>
+        <a href="#about" class="hover:text-sky-700 transition">About IOI</a>
+      </div>
+    </div>
+  </footer>
+
+
+  <!-- NATIVE MODAL 1: AUTHENTICATION (Sign In / Register / Google / Guest) -->
+  <dialog id="auth-dialog" closedby="any" aria-labelledby="auth-modal-title" class="p-0 rounded-2xl">
+    <div class="w-[90vw] max-w-md bg-white border border-slate-200 rounded-2xl p-6 sm:p-8 shadow-2xl space-y-6 text-slate-800">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <div class="flex items-center gap-2">
+          <i data-lucide="user" class="w-5 h-5 text-sky-600"></i>
+          <h2 id="auth-modal-title" class="text-xl font-extrabold text-slate-900">Student Portal Access</h2>
+        </div>
+        <form method="dialog">
+          <button type="submit" class="p-1 rounded-lg text-slate-400 hover:text-slate-700 transition">
+            <i data-lucide="x" class="w-5 h-5"></i>
+          </button>
+        </form>
+      </div>
+
+      <!-- Auth Mode Tabs -->
+      <div class="grid grid-cols-2 p-1 bg-slate-100 rounded-xl border border-slate-200">
+        <button id="tab-auth-login" type="button" class="py-2 text-xs font-bold rounded-lg bg-sky-600 text-white transition shadow-sm">
+          Sign In
+        </button>
+        <button id="tab-auth-register" type="button" class="py-2 text-xs font-bold rounded-lg text-slate-600 hover:text-slate-900 transition">
+          Sign Up
+        </button>
+      </div>
+
+      <!-- Sign In Form -->
+      <form id="form-login" class="space-y-4">
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">Email Address</label>
+          <input type="email" id="login-email" required placeholder="scholar@example.com" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 text-sm text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:border-sky-500">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">Password</label>
+          <input type="password" id="login-password" required placeholder="••••••••" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 text-sm text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:border-sky-500">
+        </div>
+        <button type="submit" class="w-full py-3 rounded-xl bg-sky-600 hover:bg-sky-500 text-white font-bold text-sm tracking-wide shadow-md shadow-sky-600/25 transition">
+          Sign In to Account
+        </button>
+      </form>
+
+      <!-- Sign Up Form (Hidden initially) -->
+      <form id="form-register" class="space-y-4 hidden">
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">Full Legal Name (for Certificate)</label>
+          <input type="text" id="reg-name" required placeholder="e.g., Nusrat Jahan Chowdhury" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 text-sm text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:border-sky-500">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">Email Address</label>
+          <input type="email" id="reg-email" required placeholder="nusrat@example.com" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 text-sm text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:border-sky-500">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">Create Password</label>
+          <input type="password" id="reg-password" required placeholder="At least 6 characters" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 text-sm text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:border-sky-500">
+        </div>
+        <button type="submit" class="w-full py-3 rounded-xl bg-sky-600 hover:bg-sky-500 text-white font-bold text-sm tracking-wide shadow-md shadow-sky-600/25 transition">
+          Create Account &amp; Save Progress
+        </button>
+      </form>
+
+      <!-- Social & Guest Alternatives -->
+      <div class="space-y-3 pt-2 border-t border-slate-100">
+        <button id="btn-login-google" type="button" class="w-full py-2.5 rounded-xl bg-white hover:bg-slate-50 border border-slate-300 text-slate-800 font-semibold text-xs transition flex items-center justify-center gap-2 shadow-sm">
+          <svg class="w-4 h-4" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/></svg>
+          Continue with Google
+        </button>
+
+        <button id="btn-login-guest-modal" type="button" class="w-full py-2.5 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-700 font-semibold text-xs transition flex items-center justify-center gap-2">
+          <i data-lucide="compass" class="w-4 h-4 text-sky-600"></i>
+          Explore as Guest (1-Click)
+        </button>
+      </div>
+
+      <div id="auth-error-msg" class="hidden text-xs text-rose-700 bg-rose-50 p-3 rounded-xl border border-rose-200"></div>
+    </div>
+  </dialog>
+
+
+  <!-- NATIVE MODAL 2: GUEST CERTIFICATE CLAIM DIALOG -->
+  <dialog id="claim-dialog" closedby="any" aria-labelledby="claim-modal-title" class="p-0 rounded-2xl">
+    <div class="w-[90vw] max-w-md bg-white border border-amber-300 rounded-2xl p-6 sm:p-8 shadow-2xl space-y-6 text-slate-800">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <div class="flex items-center gap-2">
+          <i data-lucide="award" class="w-5 h-5 text-amber-500"></i>
+          <h2 id="claim-modal-title" class="text-xl font-extrabold text-slate-900">Claim Your Certificate</h2>
+        </div>
+        <form method="dialog">
+          <button type="submit" class="p-1 rounded-lg text-slate-400 hover:text-slate-700 transition">
+            <i data-lucide="x" class="w-5 h-5"></i>
+          </button>
+        </form>
+      </div>
+
+      <div class="p-4 rounded-xl bg-amber-50 border border-amber-200 text-xs text-amber-900">
+        <strong>Create a free account to imprint your name and claim your certificate!</strong>
+        <p class="mt-1 text-slate-600">Your examination score will be permanently registered and your verifiable diploma unlocked.</p>
+      </div>
+
+      <form id="form-claim-register" class="space-y-4">
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">Your Full Name (As it should appear on diploma)</label>
+          <input type="text" id="claim-name" required placeholder="e.g. Dr. Tanvir Hossain" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 text-sm text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:border-amber-500">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">Email Address</label>
+          <input type="email" id="claim-email" required placeholder="tanvir@example.com" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 text-sm text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:border-amber-500">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">Create Password</label>
+          <input type="password" id="claim-password" required placeholder="••••••••" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 text-sm text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:border-amber-500">
+        </div>
+        <button type="submit" class="w-full py-3 rounded-xl bg-amber-500 hover:bg-amber-400 text-white font-black text-xs uppercase tracking-wider shadow-md transition">
+          Register &amp; Unlock Certificate
+        </button>
+      </form>
+    </div>
+  </dialog>
+
+
+  <!-- NATIVE MODAL 3: BACKEND CONFIGURATION DIALOG -->
+  <dialog id="backend-config-dialog" closedby="any" aria-labelledby="backend-modal-title" class="p-0 rounded-2xl">
+    <div class="w-[90vw] max-w-md bg-white border border-slate-200 rounded-2xl p-6 sm:p-8 shadow-2xl space-y-6 text-slate-800">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <div class="flex items-center gap-2">
+          <i data-lucide="database" class="w-5 h-5 text-sky-600"></i>
+          <h2 id="backend-modal-title" class="text-lg font-bold text-slate-900">Auth &amp; Database Backend Setup</h2>
+        </div>
+        <form method="dialog">
+          <button type="submit" class="p-1 rounded-lg text-slate-400 hover:text-slate-700 transition">
+            <i data-lucide="x" class="w-5 h-5"></i>
+          </button>
+        </form>
+      </div>
+
+      <p class="text-xs text-slate-600 leading-relaxed">
+        The application is equipped with a turnkey high-performance local storage auth backend out of the box. You can optionally attach a live <strong>Firebase</strong> or <strong>Supabase</strong> project below:
+      </p>
+
+      <form id="form-backend-config" class="space-y-4">
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">Backend Provider</label>
+          <select id="cfg-provider" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 text-sm text-slate-900 focus:bg-white focus:outline-none focus:border-sky-500">
+            <option value="local">Built-in Persistent Local Storage (Default &amp; Recommended)</option>
+            <option value="firebase">Google Firebase Auth / Firestore</option>
+            <option value="supabase">Supabase Auth / PostgreSQL</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">Project URL / Domain (Optional)</label>
+          <input type="text" id="cfg-url" placeholder="https://xyz.supabase.co or your-app.firebaseapp.com" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 text-xs text-slate-900 placeholder-slate-400">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">API Key / Public Key (Optional)</label>
+          <input type="text" id="cfg-apikey" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 text-xs text-slate-900 placeholder-slate-400 font-mono">
+        </div>
+        <button type="submit" class="w-full py-2.5 rounded-xl bg-sky-600 hover:bg-sky-500 text-white font-bold text-xs transition shadow-sm">
+          Save Settings
+        </button>
+      </form>
+    </div>
+  </dialog>
+
+  <!-- Application Bootstrap Script -->
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
