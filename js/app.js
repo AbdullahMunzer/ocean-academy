@@ -275,12 +275,12 @@ class App {
     });
 
     // Sign In Submit
-    formLogin?.addEventListener('submit', (e) => {
+    formLogin?.addEventListener('submit', async (e) => {
       e.preventDefault();
       try {
         const email = document.getElementById('login-email').value;
         const password = document.getElementById('login-password').value;
-        authService.login({ email, password });
+        await authService.login({ email, password });
         oceanAudio.playSuccess();
         authDialog.close();
         this.checkCertificateStatusAfterAuth();
@@ -292,13 +292,13 @@ class App {
     });
 
     // Sign Up Submit
-    formRegister?.addEventListener('submit', (e) => {
+    formRegister?.addEventListener('submit', async (e) => {
       e.preventDefault();
       try {
         const fullName = document.getElementById('reg-name').value;
         const email = document.getElementById('reg-email').value;
         const password = document.getElementById('reg-password').value;
-        authService.register({ fullName, email, password });
+        await authService.register({ fullName, email, password });
         oceanAudio.playCelebration();
         authDialog.close();
         this.checkCertificateStatusAfterAuth();
@@ -310,13 +310,25 @@ class App {
     });
 
     // Google Sign-In button
-    document.getElementById('btn-login-google')?.addEventListener('click', () => {
+    document.getElementById('btn-login-google')?.addEventListener('click', async () => {
       oceanAudio.playSuccess();
-      const guestName = prompt("Enter your Name for Google Account simulation:", "Dr. Ocean Explorer");
-      if (guestName) {
-        authService.loginWithGoogle(guestName);
-        authDialog.close();
-        this.checkCertificateStatusAfterAuth();
+      try {
+        if (authService.isFirebaseReady) {
+          await authService.loginWithGoogle();
+          authDialog.close();
+          this.checkCertificateStatusAfterAuth();
+        } else {
+          const guestName = prompt("Enter your Name for Google Account simulation (or connect real Firebase via 'Auth / Backend Setup' in footer):", "Dr. Ocean Explorer");
+          if (guestName) {
+            await authService.loginWithGoogle(guestName);
+            authDialog.close();
+            this.checkCertificateStatusAfterAuth();
+          }
+        }
+      } catch (err) {
+        authError.textContent = err.message;
+        authError.classList.remove('hidden');
+        oceanAudio.playIncorrect();
       }
     });
 
@@ -329,13 +341,13 @@ class App {
     });
 
     // Guest Certificate Claim Dialog Form
-    document.getElementById('form-claim-register')?.addEventListener('submit', (e) => {
+    document.getElementById('form-claim-register')?.addEventListener('submit', async (e) => {
       e.preventDefault();
       try {
         const fullName = document.getElementById('claim-name').value;
         const email = document.getElementById('claim-email').value;
         const password = document.getElementById('claim-password').value;
-        authService.register({ fullName, email, password });
+        await authService.register({ fullName, email, password });
         oceanAudio.playCelebration();
         claimDialog.close();
         this.renderUnlockedCertificate();
@@ -358,20 +370,55 @@ class App {
     document.getElementById('btn-open-backend-config')?.addEventListener('click', () => {
       oceanAudio.playClick();
       const cfg = authService.getBackendConfig();
-      document.getElementById('cfg-provider').value = cfg.provider || 'local';
-      document.getElementById('cfg-url').value = cfg.projectUrl || '';
-      document.getElementById('cfg-apikey').value = cfg.apiKey || '';
+      const select = document.getElementById('cfg-provider');
+      if (select) select.value = cfg.provider || 'local';
+      const jsonArea = document.getElementById('cfg-firebase-json');
+      if (jsonArea && cfg.provider === 'firebase') {
+        jsonArea.value = JSON.stringify(cfg, null, 2);
+      }
       backendDialog.showModal();
     });
 
     document.getElementById('form-backend-config')?.addEventListener('submit', (e) => {
       e.preventDefault();
       const provider = document.getElementById('cfg-provider').value;
-      const projectUrl = document.getElementById('cfg-url').value;
-      const apiKey = document.getElementById('cfg-apikey').value;
-      authService.saveBackendConfig({ provider, projectUrl, apiKey });
-      alert(`Backend configuration updated to: ${provider.toUpperCase()}`);
-      backendDialog.close();
+      if (provider === 'firebase') {
+        const raw = document.getElementById('cfg-firebase-json')?.value.trim() || '';
+        let parsed = null;
+        try {
+          if (raw.startsWith('{')) {
+            parsed = JSON.parse(raw);
+          } else {
+            const extract = (key) => {
+              const m = raw.match(new RegExp(`${key}\\s*:\\s*["']([^"']+)["']`));
+              return m ? m[1] : '';
+            };
+            parsed = {
+              apiKey: extract('apiKey'),
+              authDomain: extract('authDomain'),
+              projectId: extract('projectId'),
+              storageBucket: extract('storageBucket'),
+              messagingSenderId: extract('messagingSenderId'),
+              appId: extract('appId')
+            };
+          }
+          if (!parsed.apiKey || !parsed.projectId) {
+            throw new Error('Please ensure apiKey and projectId are present in your Firebase config.');
+          }
+          parsed.provider = 'firebase';
+          authService.saveBackendConfig(parsed);
+          alert('Firebase configuration saved successfully! The app is now connected to live Firebase Authentication.');
+          backendDialog.close();
+          window.location.reload();
+        } catch (err) {
+          alert('Error parsing Firebase config: ' + err.message);
+        }
+      } else {
+        authService.saveBackendConfig({ provider: 'local' });
+        alert('Switched to Built-in Local Storage (Offline / Demo Mode).');
+        backendDialog.close();
+        window.location.reload();
+      }
     });
 
     // Profile logout
